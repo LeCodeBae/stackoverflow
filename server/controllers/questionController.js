@@ -25,31 +25,42 @@ addQuestion = (req,res) => {
   question.save(function(err,question){
     if (err) res.send(err)
     let questionId = question._id
-    User.findOne({id: user._id},function(err,user){
+    User.findOne({_id: user._id},function(err,user){
       if (err) res.send(err)
       user.questions.push(questionId)
       user.save(function(err,user){
         if(err) res.send(err)
-        console.log(user)
+        res.send(user)
       })
     })
   })
 }
 
 updateQuestion = (req,res) => {
+  let user = req.user
   Question.findById(req.params.id).then((question)=>{
-    question.content = req.body.content;
-    question.save((err,question)=>{
-      if (err) res.send(err)
-      res.send(question)
-    })
+    if(question.creator === user._id){
+      question.content = req.body.content || question.content;
+      question.save((err,question)=>{
+        if (err) res.send(err)
+        res.send(question)
+      })
+    } else {
+      res.send({msg: 'You are not Authorised!'})
+    }
   })
 }
 
-deleteQuestion = (req,res) => {
-  Question.remove({_id: req.params.id}, function(err, question){
-    if (err) res.send(err)
-    res.send(question)
+deleteQuestion = (req,res) => {let user = req.user
+  Question.findById(req.params.id).then((question)=>{
+    if(question.creator === user._id){
+      Question.remove({_id: req.params.id}, function(err, question){
+        if (err) res.send(err)
+        res.send(question)
+      })
+    } else {
+      res.send({msg: 'You are not Authorised!'})
+    }
   })
 }
 

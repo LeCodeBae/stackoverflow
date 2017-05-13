@@ -40,4 +40,4 @@ createToken = (req,res) =>{
   })
 }
 
-module.exports = {addUser, findUsers, createToken};
+module.exports = {addUser, findOneUser, findUsers, createToken};

@@ -3,7 +3,9 @@ var Question = require('../models/question');
 var User = require('../models/user');
 
 findAnswers = (req,res) => {
-  Answer.find({}).then()
+  Answer.find({}).then((answers)=>{
+    res.send(answers)
+  })
 }
 
 addAnswer = (req,res) => {
@@ -16,15 +18,18 @@ addAnswer = (req,res) => {
   answer.save((err, answer)=>{
     if(err) res.send(err)
     User.findById(user._id).then((user)=>{
+      if (err) res.send(err)
       user.answers.push(answer._id)
       user.save((err, user)=>{
         Question.findById(req.body.questionId).then((question)=>{
-          question.asnwers.push(answer._id)
+          question.answers.push(answer._id)
           question.save((err,question)=>{
             if (err) res.send(err)
+            res.send(question)
           })
         })
       })
+    })
   })
 }
 
