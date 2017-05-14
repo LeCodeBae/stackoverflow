@@ -107,45 +107,60 @@ export default {
     },
     addVoteQuestion(up, questionid){
       let that = this;
-      Vue.axios.post('http://localhost:3000/votes', {
-        up: up,
-        questionId: questionid
-      },{
-        headers: {
-          token: localStorage.getItem('token')
-        }
-      }).then((response)=>{
-        if(response.data.msg){
-          this.$alert(response.data.msg, 'Alert', {
-            confirmButtonText: 'OK',
-          });
-        } else {
-          that.getter()
-        }
-      }).catch((err)=>{
-        console.log(err);
-      })
+      if(localStorage.getItem('token')){
+        Vue.axios.post('http://localhost:3000/votes', {
+          up: up,
+          questionId: questionid
+        },{
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        }).then((response)=>{
+          if(response.data.msg){
+            this.$alert(response.data.msg, 'Alert', {
+              confirmButtonText: 'OK',
+            });
+          } else {
+            that.getter()
+          }
+        }).catch((err)=>{
+          console.log(err);
+        })
+      } else {
+        that.$message({
+              type: 'warning',
+              message: 'Please sign in to vote!'
+            });
+      }
+      
     },
     addVoteAnswer(up, answerid){
       let that = this;
-      Vue.axios.post('http://localhost:3000/votes', {
-        up: up,
-        answerId: answerid
-      },{
-        headers: {
-          token: localStorage.getItem('token')
-        }
-      }).then((response)=>{
-        if(response.data.msg){
-          this.$alert(response.data.msg, 'Alert', {
-            confirmButtonText: 'OK',
-          });
-        } else {
-          that.getter()
-        }
-      }).catch((err)=>{
-        console.log(err);
-      })
+      if(localStorage.getItem('token')){
+        Vue.axios.post('http://localhost:3000/votes', {
+          up: up,
+          answerId: answerid
+        },{
+          headers: {
+            token: localStorage.getItem('token')
+          }
+        }).then((response)=>{
+          if(response.data.msg){
+            this.$alert(response.data.msg, 'Alert', {
+              confirmButtonText: 'OK',
+            });
+          } else {
+            that.getter()
+          }
+        }).catch((err)=>{
+          console.log(err);
+        })
+      } else {
+        that.$message({
+              type: 'warning',
+              message: 'Please sign in to vote!'
+            });
+      }
     }
   }
 }
