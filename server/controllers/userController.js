@@ -40,4 +40,12 @@ createToken = (req,res) =>{
   })
 }
 
-module.exports = {addUser, findOneUser, findUsers, createToken};
+getId = (req,res) =>{
+  jwt.verify(req.headers.token, 'secret', function(err,decoded){
+    if(decoded){
+      res.send(decoded)
+    }
+    if(err) res.send(err);
+  })
+}
+module.exports = {addUser, findOneUser, findUsers, createToken, getId};

@@ -2,14 +2,23 @@ var Question = require('../models/question');
 var User = require('../models/user');
 
 findAllQuestions = (req,res) => {
-  Question.find({}).then((questions)=>{
+  Question.find({})
+  .populate('answers votes')
+  .exec((err,questions)=>{
+    if (err) res.send(err)
     res.send(questions)
   })
 }
 
 findOneQuestion = (req,res) => {
   Question.findById(req.params.id)
-  .populate('creator answers')
+  .populate('creator votes')
+  .populate({
+    path: 'answers',
+    populate: {
+      path: 'creator votes'
+    }
+  })
   .exec((err,question)=>{
     if (err) res.send(err)
     res.send(question)
@@ -19,6 +28,7 @@ findOneQuestion = (req,res) => {
 addQuestion = (req,res) => {
   let user = req.user
   var question = new Question({
+    title: req.body.title,
     content: req.body.content,
     creator: user._id
   })
@@ -37,30 +47,22 @@ addQuestion = (req,res) => {
 }
 
 updateQuestion = (req,res) => {
-  let user = req.user
   Question.findById(req.params.id).then((question)=>{
-    if(question.creator === user._id){
-      question.content = req.body.content || question.content;
-      question.save((err,question)=>{
-        if (err) res.send(err)
-        res.send(question)
-      })
-    } else {
-      res.send({msg: 'You are not Authorised!'})
-    }
+    question.title = req.body.title || question.title;
+    question.content = req.body.content || question.content;
+    question.save((err,question)=>{
+      if (err) res.send(err)
+      res.send(question)
+    })
   })
 }
 
 deleteQuestion = (req,res) => {let user = req.user
   Question.findById(req.params.id).then((question)=>{
-    if(question.creator === user._id){
-      Question.remove({_id: req.params.id}, function(err, question){
-        if (err) res.send(err)
-        res.send(question)
-      })
-    } else {
-      res.send({msg: 'You are not Authorised!'})
-    }
+    Question.remove({_id: req.params.id}, function(err, question){
+      if (err) res.send(err)
+      res.send(question)
+    })
   })
 }
 

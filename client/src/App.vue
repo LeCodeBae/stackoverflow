@@ -1,13 +1,16 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img src="./assets/flowoverstack.png" alt="logo" class="logo">
+    <top-nav></top-nav>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import TopNav from './components/TopNav'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {TopNav}
 }
 </script>
 
@@ -18,6 +21,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-bottom: 50px;
+}
+.logo{
+  width: 155px;
+  height: 120px;
 }
 </style>

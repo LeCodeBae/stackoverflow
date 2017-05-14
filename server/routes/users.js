@@ -7,5 +7,6 @@ router.get('/', controller.findUsers);
 router.get('/:id', controller.findOneUser);
 router.post('/signup',controller.addUser);
 router.post('/signin', passport.authenticate('local', { session: false }), controller.createToken);
+router.post('/getId', controller.getId)
 
 module.exports = router;
